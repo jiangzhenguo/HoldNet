@@ -1,0 +1,15 @@
+ext {
+    rootProject.ext.support_version = "28.0.0"
+    rootProject.ext.room_version = "2.0.0-beta01"
+    externalRouter = "com.alibaba:arouter-api:1.4.1"
+    externalProcessor = "com.alibaba:arouter-compiler:1.2.2"
+    externalAndroidDesign =  "com.android.support:design:$rootProject.ext.support_version"
+    externalAndroidAppCompatV7 = "com.android.support:appcompat-v7:$rootProject.ext.support_version"
+    externalAndroidRecyclerView = "com.android.support:recyclerview-v7:$rootProject.ext.support_version"
+    externalAndroidmedioCompat = "com.android.support:support-media-compat:$rootProject.ext.support_version"
+    externalAndroidAppCompatV4 = "com.android.support:appcompat-v4:$rootProject.ext.support_version"
+
+    externalAndroidRoom =  "androidx.room:room-runtime:$rootProject.ext.room_version"
+    externalAndroidRoomProcessor = "androidx.room:room-compiler:$rootProject.ext.room_version"
+
+}

@@ -1,0 +1,17 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.jhon.code.vpnlibrary">
+
+    <application
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+        <service
+            android:name="com.jhon.code.vpnlibrary.service.HoldNetVpnService"
+            android:permission="android.permission.BIND_VPN_SERVICE">
+            <intent-filter>
+                <action android:name="android.net.VpnService"/>
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>
