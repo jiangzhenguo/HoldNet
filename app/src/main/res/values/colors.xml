@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#004c8c</color>
     <color name="colorPrimaryLight">#58a5f0</color>
     <color name="colorAccent">#0277bd</color>
+    <color name="min_fant_color">#88000000</color>
+    <color name="nor_fant_color">#a8000000</color>
 </resources>

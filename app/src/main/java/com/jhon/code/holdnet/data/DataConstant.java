@@ -12,6 +12,7 @@ public interface DataConstant {
 
         String PROJECT_TABLE = "project_table";
 
+        String SETTING_TABLE  = "setting_table";
 
     }
 

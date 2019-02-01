@@ -12,4 +12,7 @@ ext {
     externalAndroidRoom =  "androidx.room:room-runtime:$rootProject.ext.room_version"
     externalAndroidRoomProcessor = "androidx.room:room-compiler:$rootProject.ext.room_version"
 
+    externalAndroidLifecycle = "android.arch.lifecycle:extensions:$rootProject.ext.room_version"
+    externalAndroidLifecycleProcessor = "android.arch.lifecycle:compiler:$rootProject.ext.room_version"
+
 }
