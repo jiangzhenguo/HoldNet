@@ -2,6 +2,8 @@ package com.jhon.code.vpnlibrary.tunnel;
 
 import android.util.Log;
 
+import com.jhon.code.vpnlibrary.session.NatSession;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -51,4 +53,5 @@ public class RawTunnel extends BaseTunnel {
     public void setIsHttpRequest(boolean isHttpRequest) {
 
     }
+
 }

@@ -1,5 +1,7 @@
 package com.jhon.code.vpnlibrary.tunnel;
 
+import com.jhon.code.vpnlibrary.session.NatSession;
+
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -44,6 +46,8 @@ public interface Tunnel {
     void dispose(boolean isBrother);
 
     void setBrotherTunnel(Tunnel brotherTunnel);
+
+    void setRequest(NatSession request);
 
     Tunnel getBrotherTunnel();
 

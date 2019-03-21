@@ -9,4 +9,6 @@ public interface VpnRouter {
     String VPNSERVICE = "/vpnservice/";
 
 
+    String Vpn1 = VPNSERVICE + "vpn1";
+
 }

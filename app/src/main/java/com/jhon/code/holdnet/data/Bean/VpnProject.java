@@ -25,4 +25,6 @@ public class VpnProject implements Serializable {
     @Ignore
     public boolean is_run;
 
+    @Ignore
+    public boolean is_select;
 }

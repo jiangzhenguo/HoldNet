@@ -2,6 +2,8 @@ package com.jhon.code.vpnlibrary.util;
 
 import android.net.VpnService;
 
+import com.jhon.code.vpnlibrary.router.VpnRoutService;
+
 import java.net.Socket;
 
 /**
@@ -12,7 +14,9 @@ public class ServerConfig {
 
     VpnService mServer;
 
-    private static  ServerConfig min;
+    private static ServerConfig min;
+
+    private static VpnRoutService  mRouter;
 
     public static ServerConfig instance(){
         if(min == null){
@@ -26,9 +30,20 @@ public class ServerConfig {
     }
 
 
-    public void setServer(VpnService server){
+    public ServerConfig setServer(VpnService server){
         mServer = server;
+        return this;
     }
+
+    public ServerConfig setRouter(VpnRoutService mRouter){
+        this.mRouter = mRouter;
+        return this;
+    }
+
+    public VpnRoutService getRouter(){
+        return mRouter;
+    }
+
 
 
     public boolean protect(Socket socket){

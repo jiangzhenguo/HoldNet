@@ -1,6 +1,9 @@
 package com.jhon.code.holdnet.viewmodel;
 
 import com.jhon.code.holdnet.data.Bean.VpnProject;
+import com.jhon.code.holdnet.unit.LiveDataBus;
+import com.jhon.code.holdnet.unit.LiveDateBusKey;
+import com.jhon.code.vpnlibrary.http.HttpResponse;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -25,6 +28,13 @@ public class ProjectDetaiViewModel extends ViewModel {
     public void setProject(VpnProject project){
         mProject.setValue(project);
     }
+
+
+    public LiveData<HttpResponse> getResponseLists(){
+        return LiveDataBus.get().getChannel(LiveDateBusKey.KEY_HTTP_RESPONSE,HttpResponse.class);
+    }
+
+
 
 
 }

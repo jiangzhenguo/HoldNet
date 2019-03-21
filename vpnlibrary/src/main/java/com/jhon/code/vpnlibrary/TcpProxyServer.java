@@ -109,11 +109,14 @@ public class TcpProxyServer {
              SocketChannel localChannel = mServer.accept();
              localTunnel = TunnelFactory.wrap(localChannel,mSelect);
              InetSocketAddress destAddress = getDestAddress(localChannel);
+             short portkey = (short)localChannel.socket().getPort();
+             NatSession session = NatSessionManager.getSession(portkey);
              if(destAddress != null){
                  Tunnel remoteTunnel = TunnelFactory.createTunnelByConfig(destAddress,mSelect);
                  remoteTunnel.setIsHttpRequest(localTunnel.getIsHttpRequest());
                  remoteTunnel.setBrotherTunnel(localTunnel);
                  localTunnel.setBrotherTunnel(remoteTunnel);
+                 remoteTunnel.setRequest(session);
                  remoteTunnel.connect(destAddress);
              } else {
                  localTunnel.dispose(true);

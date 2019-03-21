@@ -59,7 +59,7 @@ public class NatSessionManager {
 		}
 
 		NatSession session = new NatSession();
-		session.LastNanoTime = System.nanoTime();
+		session.LastNanoTime = System.currentTimeMillis();
 		session.RemoteIP = remoteIP;
 		session.RemotePort = remotePort;
 

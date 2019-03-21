@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.jhon.code.vpnlibrary.compressor.Compressor;
 import com.jhon.code.vpnlibrary.compressor.CompressorFactory;
+import com.jhon.code.vpnlibrary.session.NatSession;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class HttpResponse {
 	private int waitForParseStartIndex = 0; //待解析的位置
 	private int bodyStart = 0; //body起始位
 	private ByteArrayOutputStream mBodyByteArray;
+	public NatSession session;
 
 	public HttpResponse(boolean isBlockInfo) {
 		mData = new byte[limit];

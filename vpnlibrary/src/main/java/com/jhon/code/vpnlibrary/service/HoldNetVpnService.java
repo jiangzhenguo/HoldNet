@@ -1,6 +1,7 @@
 package com.jhon.code.vpnlibrary.service;
 
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -57,13 +58,13 @@ public class HoldNetVpnService extends VpnService implements Runnable{
     @Override
     public void onCreate() {
         super.onCreate();
-        mRouter = (VpnRoutService)ARouter.getInstance().build(VpnRouter.VPNSERVICE).navigation();
+        mRouter = (VpnRoutService)ARouter.getInstance().build(VpnRouter.Vpn1).navigation();
         mPacket = new byte[20000];
         mIPHeader = new IPHeader(mPacket, 0);
         //Offset = ip报文头部长度
         mTCPHeader = new TCPHeader(mPacket, 20);
         mUDPHeader = new UDPHeader(mPacket, 20);
-        ServerConfig.instance().setServer(this);
+        ServerConfig.instance().setServer(this).setRouter(mRouter);
         registerReceiver(stopReceiver, new IntentFilter(BROADCAST_STOP_VPN));
         try {
             mTcpProxy = new TcpProxyServer(0);
@@ -71,12 +72,16 @@ public class HoldNetVpnService extends VpnService implements Runnable{
         } catch (Exception e){
             Log.d(TAG + "_01",e.toString());
         }
+    }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         if(setupVPN()) {
             sendBroadcast(new Intent(BROADCAST_VPN_STATE).putExtra("running", true));
             mThread = new Thread(this, "vpnthread");
             mThread.start();
         }
+        return super.onStartCommand(intent, flags, startId);
     }
 
     private boolean setupVPN(){
@@ -153,7 +158,7 @@ public class HoldNetVpnService extends VpnService implements Runnable{
                                     .getDestinationPort());
                         }
 
-                        session.LastNanoTime = System.nanoTime();
+                        session.LastNanoTime = System.currentTimeMillis();
                         session.PacketSent++; //注意顺序
                         int tcpDataSize = ipHeader.getDataLength() - tcpHeader.getHeaderLength();
                         if (session.PacketSent == 2 && tcpDataSize == 0) {
@@ -188,6 +193,7 @@ public class HoldNetVpnService extends VpnService implements Runnable{
     {
         super.onDestroy();
         stopVpn();
+        ServerConfig.instance().setServer(null).setRouter(null);
         unregisterReceiver(stopReceiver);
     }
 

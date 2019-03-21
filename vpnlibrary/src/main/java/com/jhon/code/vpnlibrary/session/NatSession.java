@@ -4,6 +4,8 @@ package com.jhon.code.vpnlibrary.session;
 
 import com.jhon.code.vpnlibrary.network.CommonMethods;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.HashMap;
 
 /**
@@ -19,13 +21,17 @@ public class NatSession {
 	public long LastNanoTime;
 	public boolean IsHttpsSession;
 	public String RequestUrl; //HTTP请求的url， HTTPS请求则为空
+	public URI uri;
 	public String Method; //HTTP请求方法
 	public HashMap<String,String> Values = new HashMap<>();
 	public String raw;
 
-	@Override
-	public String toString() {
-		return String.format("%s/%s:%d packet: %d", RemoteHost, CommonMethods.ipIntToString(RemoteIP),
-				RemotePort & 0xFFFF, PacketSent);
-	}
+    @Override
+    public String toString() {
+        return "NatSession{" +
+                "RequestUrl='" + RequestUrl + '\'' +
+                ", Method='" + Method + '\'' +
+                ", raw='" + raw + '\'' +
+                '}';
+    }
 }

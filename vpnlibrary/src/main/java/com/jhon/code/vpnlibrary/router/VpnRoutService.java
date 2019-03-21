@@ -3,6 +3,7 @@ package com.jhon.code.vpnlibrary.router;
 import android.app.Activity;
 
 import com.alibaba.android.arouter.facade.template.IProvider;
+import com.jhon.code.vpnlibrary.http.HttpResponse;
 
 /**
  * creater : Jhon
@@ -11,4 +12,6 @@ import com.alibaba.android.arouter.facade.template.IProvider;
  */
 public interface VpnRoutService extends IProvider {
     Class getStartActivity();
+
+    void observer(HttpResponse response);
 }

@@ -3,6 +3,7 @@ package com.jhon.code.holdnet.activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.VpnService;
 import android.os.Bundle;
 import android.view.View;
@@ -15,19 +16,27 @@ import com.jhon.code.holdnet.R;
 import com.jhon.code.holdnet.base.BaseActivity;
 import com.jhon.code.holdnet.data.Bean.VpnProject;
 import com.jhon.code.holdnet.fragment.HttpListFragment;
+import com.jhon.code.holdnet.inter.VpnControl;
 import com.jhon.code.holdnet.router.HoldNetRouter;
+import com.jhon.code.holdnet.viewmodel.ProjectDetaiViewModel;
 import com.jhon.code.vpnlibrary.router.VpnRouter;
 import com.jhon.code.vpnlibrary.service.HoldNetVpnService;
 
+import java.util.zip.Inflater;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProviders;
+
+import static com.jhon.code.vpnlibrary.service.HoldNetVpnService.BROADCAST_STOP_VPN;
 
 /**
  * creater : Jhon
  * time : 2019/1/18 0018
  */
 @Route(path = HoldNetRouter.ProjectDetialActivity.name)
-public class ProjectDetailActivity extends BaseActivity {
+public class ProjectDetailActivity extends BaseActivity implements VpnControl {
 
     private static final int VPN_REQUEST_CODE = 0x0F;
     private HttpListFragment mHttpListFragment;
@@ -35,22 +44,31 @@ public class ProjectDetailActivity extends BaseActivity {
     @Autowired(name = HoldNetRouter.ProjectDetialActivity.project)
     public VpnProject project;
 
+    private ProjectDetaiViewModel mViewModel;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ARouter.getInstance().inject(this);
         setContentView(R.layout.activity_project_detail);
+        mViewModel = ViewModelProviders.of(this).get(ProjectDetaiViewModel.class);
         mHttpListFragment = HttpListFragment.getInstance();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("project",project);
-        mHttpListFragment.setArguments(bundle);
+        mHttpListFragment.setVpnControl(this);
         FragmentTransaction transaction = mManager.beginTransaction();
         transaction.add(R.id.fl_content,mHttpListFragment);
         transaction.commitNowAllowingStateLoss();
-
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(HoldNetVpnService.BROADCAST_VPN_STATE);
+        registerReceiver(vpnStateReceiver,filter);
+        mViewModel.setProject(project);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(vpnStateReceiver);
+    }
 
     @Override
     public int getRootView() {
@@ -58,8 +76,8 @@ public class ProjectDetailActivity extends BaseActivity {
     }
 
 
-    private void startVPN()
-    {
+    @Override
+    public void startVpn() {
         Intent vpnIntent = VpnService.prepare(mContext);
         if (vpnIntent != null)
         {
@@ -70,6 +88,14 @@ public class ProjectDetailActivity extends BaseActivity {
             onActivityResult(VPN_REQUEST_CODE, RESULT_OK, null);
         }
     }
+
+    @Override
+    public void stopVpn() {
+       Intent in = new Intent();
+       in.setAction(BROADCAST_STOP_VPN);
+       sendBroadcast(in);
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -91,12 +117,13 @@ public class ProjectDetailActivity extends BaseActivity {
             {
                 if (intent.getBooleanExtra("running", false))
                 {
-                    project.is_run = false;
-
+                    project.is_run = true;
+                    mViewModel.setProject(project);
                 }
                 else
                 {
-                    project.is_run = true;
+                    project.is_run = false;
+                    mViewModel.setProject(project);
                     stopService(new Intent(mContext, HoldNetVpnService.class));
 
                 }

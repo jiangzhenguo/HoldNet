@@ -4,6 +4,8 @@ import android.util.Log;
 
 
 import com.jhon.code.vpnlibrary.http.HttpResponse;
+import com.jhon.code.vpnlibrary.router.VpnRoutService;
+import com.jhon.code.vpnlibrary.session.NatSession;
 import com.jhon.code.vpnlibrary.util.ServerConfig;
 
 import java.io.IOException;
@@ -31,8 +33,11 @@ public abstract class BaseTunnel implements Tunnel{
     private boolean mDisposed;
     private HttpResponse mHttpResponse;
     private SocketChannel mInnerChannel; //自己的Channel
+    private NatSession mSession;
+    private VpnRoutService mService;
 
     public BaseTunnel(InetSocketAddress address,Selector selector) throws IOException {
+        mService = ServerConfig.instance().getRouter();
         this.mServerAddress = address;
         this.mSelector = selector;
         this.mInnerChannel = SocketChannel.open();
@@ -111,8 +116,12 @@ public abstract class BaseTunnel implements Tunnel{
                        ByteBuffer httpBuffer = null;
                        httpBuffer = mHttpResponse.getBuffer();
                        if (httpBuffer != null) {
+                           mHttpResponse.session = mSession;
                            Log.d(TAG,"header: " + mHttpResponse.getHeaderString() + " \n" + "Body: " + mHttpResponse.getBody());
                            sendToBrother(key, httpBuffer);
+                           if(mService != null){
+                               mService.observer(mHttpResponse);
+                           }
                            mHttpResponse = null; //节约内存
                        }
                    } else {
@@ -168,6 +177,11 @@ public abstract class BaseTunnel implements Tunnel{
         } else {
             return true;
         }
+    }
+
+    @Override
+    public void setRequest(NatSession request) {
+        this.mSession =request;
     }
 
     protected void sendToBrother(SelectionKey key, ByteBuffer buffer) throws Exception {

@@ -3,11 +3,14 @@ package com.jhon.code.vpnlibrary.http;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.URLUtil;
 
 
 import com.jhon.code.vpnlibrary.network.CommonMethods;
 import com.jhon.code.vpnlibrary.session.NatSession;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.Locale;
 import java.util.Set;
 
@@ -79,6 +82,7 @@ public class HttpRequestHeaderParser {
 			} else {
 				session.RequestUrl = url;
 			}
+			session.uri = URI.create(session.RequestUrl);
 		}
 		//解析Method
 		if(!TextUtils.isEmpty(session.Method)){
